@@ -1,6 +1,6 @@
 const dataPath = require("./minecraft-data/data/dataPaths.json")
 
-const data = require(`./minecraft-data/data/${dataPath.pc["1.20.1"].protocol}/protocol.json`)
+const data = require(`./minecraft-data/data/${dataPath.pc["1.18.2"].protocol}/protocol.json`)
 const assert = require("assert")
 
 function indent(code, indent = "  ") {
@@ -151,6 +151,32 @@ minecraft_add_buffer(tree, hf_${path}, tvb, &offset, ${path}_len);`,
   ${inner.code}
 }`,
       hf_type: inner.hf_type,
+    }
+  },
+  bitfield(args, { path }) {
+    return {
+
+      code: `minecraft_add_bitfield(tree, hf_${path}, tvb, &offset);`,
+      hf_type: "FT_BYTES",
+    }
+  },
+  switch(args, { path }) {
+    return {
+      code: `minecraft_add_switch(tree, hf_${path}, tvb, &offset);`,
+      hf_type: "FT_BYTES",
+    }
+  },
+  varlong(args, { path }) {
+    return {
+      code: `minecraft_add_varlong(tree, hf_${path}, tvb, &offset);`,
+      hf_type: "FT_UINT64",
+      return_type: "guint64"
+    }
+  },
+  array(args, { path }) {
+    return {
+      code: `minecraft_add_array(tree, hf_${path}, tvb, &offset);`,
+      hf_type: "FT_BYTES"
     }
   },
 }

@@ -1,16 +1,14 @@
 {
   description = "my project description";
 
-  inputs.flake-utils.url = "github:numtide/flake-utils";
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-  outputs = { self, nixpkgs, flake-utils }:
+  outputs = { self, nixpkgs }:
     let pkgs = nixpkgs.legacyPackages."x86_64-linux";
     in {
-      devShells.default = {
-        pkgs.mkShell {
-          nativeBuildInputs = with pkgs; [ pkg-config ];
-          buildInputs = with pkgs; [ wireshark.dev gnumake glib.dev nodejs ];
-        }
+      devShells."x86_64-linux".default = pkgs.mkShell {
+        nativeBuildInputs = with pkgs; [ pkg-config ];
+        buildInputs = with pkgs; [ wireshark.dev gnumake glib.dev nodejs libgcrypt ];
       };
     };
 }
